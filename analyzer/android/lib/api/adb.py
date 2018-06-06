@@ -102,7 +102,7 @@ def get_package_activity_name_androguard(path):
     except (IOError, OSError,BadZipfile) as e:
         raise CuckooPackageError("BAD_APK:"+os.path.basename(path)+","+e.message)
 
-def execute_sample(package,activity, path):
+def execute_sample(package,activity):
     """Execute the sample on the emulator via adb"""
     log.debug("executing sample on emulator :adb shell am start -n " +package+"/"+activity)
     try:
@@ -113,7 +113,6 @@ def execute_sample(package,activity, path):
                      executable='/system/bin/sh') as proc:  # adb shell am start -n $pkg/$act
 
             log.info(str(proc.communicate()))
-            a = apk.APK(path)
     except Exception as e:
         log.info("Exception in Popen: %s",e)
 
