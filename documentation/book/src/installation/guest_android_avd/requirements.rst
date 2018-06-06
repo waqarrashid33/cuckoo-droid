@@ -70,10 +70,10 @@ and click OK.
 
 Prepare the Android Virtual Device Reference Machine for Analysis
 =================================================================
-Before starting the emulator do the following:
-
+Before starting the emulator do the following::
+    
     $ cp /sdk_path/system-images/android-16/default/armeabi-v7a/system.img /home/user/.android/avd/aosx.avd/system-qemu.img
-
+    
 Start the emulator with ``/system`` in read-write mode::
 
 	$ emulator -avd aosx -qemu -nand -system,size=0x1f400000,file=/home/user/.android/avd/aosx.avd/system-qemu.img&
