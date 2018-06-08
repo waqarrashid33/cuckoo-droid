@@ -16,9 +16,8 @@ from lib.cuckoo.api.intresting_strings import find_strings
 try:
     from androguard.core.bytecodes.apk import APK
     from androguard.core.bytecodes.dvm import DalvikVMFormat
-    from androguard.core.analysis.analysis import uVMAnalysis, PathVar, TAINTED_PACKAGE_CALL, is_crypto_code
+    from androguard.core.analysis.analysis import Analysis
     from androguard.core.analysis import analysis
-    from androguard.core.bytecodes.dvm_permissions import DVM_PERMISSIONS
     HAVE_ANDROGUARD = True
 except ImportError:
     HAVE_ANDROGUARD = False
@@ -149,6 +148,7 @@ class ApkInfo(Processing):
         apkinfo = {}
 
         if "file" not in self.task["category"] or not HAVE_ANDROGUARD:
+            print("####### Not Running Androgaurd!! ######")
             return
 
         f = File(self.task["target"])
@@ -197,19 +197,24 @@ class ApkInfo(Processing):
                 if self.options.decompilation:
                     if self.check_size(apkinfo["files"]):
                         vm = DalvikVMFormat(a.get_dex())
-                        vmx = uVMAnalysis(vm)
+                        vmx = Analysis(vm)
 
                         static_calls["all_methods"] = get_methods(vmx)
-                        static_calls["is_native_code"] = analysis.is_native_code(vmx)
-                        static_calls["is_dynamic_code"] = analysis.is_dyn_code(vmx)
-                        static_calls["is_reflection_code"] = analysis.is_reflection_code(vmx)
-                        static_calls["is_crypto_code"] = is_crypto_code(vmx)
+                        static_calls["permissions_method_calls"] = get_show_Permissions(vmx)
+
+                        static_calls["native_method_calls"] = get_show_NativeMethods(vmx)
+                        static_calls["is_native_code"] = bool(static_calls["native_method_calls"]) # True if not empty, False if empty
 
                         static_calls["dynamic_method_calls"] = get_show_DynCode(vmx)
+                        static_calls["is_dynamic_code"] = bool(static_calls["dynamic_method_calls"])
+
                         static_calls["reflection_method_calls"] = get_show_ReflectionCode(vmx)
-                        static_calls["permissions_method_calls"] = get_show_Permissions(vmx)
+                        static_calls["is_reflection_code"] = bool(static_calls["reflection_method_calls"])
+
                         static_calls["crypto_method_calls"] = get_show_CryptoCode(vmx)
-                        static_calls["native_method_calls"] = get_show_NativeMethods(vmx)
+                        static_calls["is_crypto_code"] = bool(static_calls["crypto_method_calls"])
+
+
 
                         classes = list()
                         for cls in vm.get_classes():
