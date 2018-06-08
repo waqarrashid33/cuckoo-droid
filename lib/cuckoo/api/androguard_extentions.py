@@ -34,16 +34,15 @@ def get_permissions(apk):
     """
     permission_list = []
 
-    perms = apk.get_details_permissions()
-    perm = {}
-
     # {permission: [protectionLevel, label, description]}
     # https://github.com/androguard/androguard/issues/529
-    for name in apk.get_details_permissions():
+
+    for name, detail in apk.get_details_permissions().items():
+        perm = dict()
         perm["name"] = name
-        perm["severity"] = perms[name][0]
-        perm["action"] = perms[name][1]
-        perm["description"] = perms[name][2]
+        perm["severity"] = detail[0]
+        perm["action"] = detail[1]
+        perm["description"] = detail[2]
         permission_list.append(perm)
     return permission_list
 
