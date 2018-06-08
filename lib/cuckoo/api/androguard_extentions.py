@@ -97,7 +97,7 @@ def search_methods(vmx, method_regex):
     list_paths = []
     for mca in vmx.find_methods(method_regex):
         for ref_class, ref_method, offset in mca.get_xref_from():
-            list_paths.append("%d %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags(),  # Fixme
+            list_paths.append("%s %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags_string(),  # Fixme: Not sure what was here before, replicated that behavior
                                                         ref_method.get_class_name(),
                                                         ref_method.get_name(),
                                                         ref_method.get_descriptor(),
