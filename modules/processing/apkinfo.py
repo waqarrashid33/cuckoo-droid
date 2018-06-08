@@ -112,8 +112,10 @@ class ApkInfo(Processing):
                     if file["size"] < self.options.decompilation_threshold:
                         return True
                     else:
+                        log.warning("Dex size bigger than decompilation_threshold " + str(file["size"]) + " > " + str(self.options.decompilation_threshold))
                         return False
                 else:
+                    log.warning("decompilation_threshold not defined")  # Would not happen but we will leave it here
                     return True
         return False
 
@@ -148,7 +150,6 @@ class ApkInfo(Processing):
         apkinfo = {}
 
         if "file" not in self.task["category"] or not HAVE_ANDROGUARD:
-            print("####### Not Running Androgaurd!! ######")
             return
 
         f = File(self.task["target"])
@@ -198,6 +199,7 @@ class ApkInfo(Processing):
                     if self.check_size(apkinfo["files"]):
                         vm = DalvikVMFormat(a.get_dex())
                         vmx = Analysis(vm)
+                        vmx.create_xref()
 
                         static_calls["all_methods"] = get_methods(vmx)
                         static_calls["permissions_method_calls"] = get_show_Permissions(vmx)
@@ -222,9 +224,8 @@ class ApkInfo(Processing):
 
                         static_calls["classes"] = classes
 
-                else:
-                    log.warning("Dex size bigger than: %s",
-                                self.options.decompilation_threshold)
+                    else:
+                        log.warning("Aborted decompilation, static extraction of calls not perforemd",)
 
                 apkinfo["static_method_calls"] = static_calls
 
