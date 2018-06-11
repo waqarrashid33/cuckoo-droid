@@ -1,5 +1,7 @@
 from androguard.core.bytecodes import apk, dvm
 from androguard.core.analysis.analysis import Analysis
+from androguard.core.androconf import load_api_specific_resource_module
+
 
 
 def get_methods(vmx):
