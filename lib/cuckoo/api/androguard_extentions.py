@@ -88,14 +88,14 @@ def get_show_Permissions(vmx):
     for method in methods:
         xrefs_from = list()
         for ref_class, ref_method, offset in mca_dict[method].get_xref_from():
-            xrefs_from.append("%d %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags(),  # Fixme
-                                                        ref_method.get_class_name(),
-                                                        ref_method.get_name(),
+            xrefs_from.append("%s %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags_string(),  # Fixme: What was path access flag?
+                                                        dvm.get_type(ref_method.get_class_name()),
+                                                        dvm.get_type(ref_method.get_name()),
                                                         ref_method.get_descriptor(),
                                                         offset,
-                                                        mca.get_method().get_class_name(),
-                                                        mca.get_method().get_name(),
-                                                        mca.get_method().get_descriptor()))
+                                                        dvm.get_type(mca.get_method().get_class_name()),
+                                                        dvm.get_type(mca.get_method().get_name()),
+                                                        dvm.get_type(mca.get_method().get_descriptor())))
         for permission in permission_dict[method]:
             perm_key = permission.replace("android.permission.", "").replace(".", "_")
             if perm_key not in permissions:
@@ -115,14 +115,14 @@ def search_methods(vmx, method_regex):
     list_paths = []
     for mca in vmx.find_methods(method_regex):
         for ref_class, ref_method, offset in mca.get_xref_from():
-            list_paths.append("%s %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags_string(),  # Fixme: Not sure what was here before, replicated that behavior
-                                                        ref_method.get_class_name(),
-                                                        ref_method.get_name(),
-                                                        ref_method.get_descriptor(),
+            list_paths.append("%s %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags_string(),  # Fixme: What was path access flag?
+                                                        dvm.get_type(ref_method.get_class_name()),
+                                                        dvm.get_type(ref_method.get_name()),
+                                                        dvm.get_type(ref_method.get_descriptor()),
                                                         offset,
-                                                        mca.get_method().get_class_name(),
-                                                        mca.get_method().get_name(),
-                                                        mca.get_method().get_descriptor()))
+                                                        dvm.get_type(mca.get_method().get_class_name()),
+                                                        dvm.get_type(mca.get_method().get_name()),
+                                                        dvm.get_type(mca.get_method().get_descriptor())))
     return list_paths
 
 
