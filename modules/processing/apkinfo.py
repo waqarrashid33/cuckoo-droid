@@ -115,7 +115,7 @@ class ApkInfo(Processing):
                         log.warning("Dex size bigger than decompilation_threshold " + str(file["size"]) + " > " + str(self.options.decompilation_threshold))
                         return False
                 else:
-                    log.warning("decompilation_threshold not defined, doing compilation")
+                    log.warning("decompilation_threshold not defined, decompiling")
                     return True
         return False
 
