@@ -24,7 +24,7 @@ def install_sample(path):
         log.info("pm install stdout: " + stdout)
     if len(stderr) > 0:
         log.info("pm install stderr: " + stderr)
-    lines = stdout.split("\n")
+    lines = stderr.split("\n")
     for line in lines:
         #if in command output will appear "Failure" it means that the sample did not install
         if("Failure" in line):
