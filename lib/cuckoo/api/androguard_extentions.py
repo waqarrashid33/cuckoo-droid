@@ -64,26 +64,42 @@ def get_extended_receivers(apk):
     return receivers
 
 
-#TODO: To implement this function
-def get_show_Permissions(dx):
+# https://github.com/androguard/androguard/issues/222
+# https://github.com/androguard/androguard/issues/222#issue-215746838
+def get_show_Permissions(vmx):
     """
-    Checks for functions that need permissions, more details to be added
-    :param dx: Analysis object of vm
-    :return: list of permissions
-    :rtype: list of Strings
+    Checks for functions that need permissions
+    :param vmx: Analysis object of vm
+    :return: dict of permissions {permission, XrefsFrom}
+    :rtype: dictionary
     """
-    """
-    p = dx.get_permissions( [] )
+
     permissions = {}
-    for i in p :
-        paths=[]
-        #print i, ":"
-        for j in p[i] :
-           paths.append(get_show_Path(dx.get_vm(), j))
-        permissions[i.replace("android.permission.", "").replace(".", "_")] = paths
+    permission_dict = load_api_specific_resource_module("api_permission_mappings", 16)
+    mca_dict = dict()
+    for ca in vmx.get_classes():
+        for mca in ca.get_methods():
+            mca_dict["{}-{}-{}".format(ca.orig_class.name, mca.get_method().get_name(), mca.get_method().get_descriptor())] = mca;
+
+    methods = set(permission_dict.keys()) & set(mca_dict.keys())
+
+    for method in methods:
+        xrefs_from = list()
+        for ref_class, ref_method, offset in mca_dict[method].get_xref_from():
+            xrefs_from.append("%d %s->%s%s (0x%x) ---> %s->%s%s" % (ref_method.get_access_flags(),  # Fixme
+                                                        ref_method.get_class_name(),
+                                                        ref_method.get_name(),
+                                                        ref_method.get_descriptor(),
+                                                        offset,
+                                                        mca.get_method().get_class_name(),
+                                                        mca.get_method().get_name(),
+                                                        mca.get_method().get_descriptor()))
+        for permission in permission_dict[method]:
+            perm_key = permission.replace("android.permission.", "").replace(".", "_")
+            if perm_key not in permissions:
+                permissions[perm_key] = list()
+            permissions[perm_key].extend(xrefs_from)
     return permissions
-    """
-    return []
 
 
 
