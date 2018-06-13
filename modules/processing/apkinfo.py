@@ -179,7 +179,7 @@ class ApkInfo(Processing):
                 manifest["receivers"] = a.get_receivers()
                 manifest["receivers_actions"] = get_extended_receivers(a)
                 manifest["providers"] = a.get_providers()
-                manifest["libraries"] = a.get_libraries()
+                manifest["libraries"] = list(a.get_libraries())
                 apkinfo["manifest"] = manifest
 
                 apkinfo["icon"] = get_apk_icon(self.file_path)
@@ -231,6 +231,5 @@ class ApkInfo(Processing):
 
         except (IOError, OSError, BadZipfile) as e:
             raise CuckooProcessingError("Error opening file %s" % e)
-
         return apkinfo
 
