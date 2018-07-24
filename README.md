@@ -15,7 +15,7 @@ Installation - Easy integration script:
     git config --global user.name "Your Name"
     git clone --depth=1 https://github.com/cuckoobox/cuckoo.git cuckoo -b 1.2
     cd cuckoo
-    git remote add droid https://github.com/idanr1986/cuckoo-droid
+    git remote add droid https://github.com/quoscient/cuckoo-droid
     git pull --allow-unrelated-histories --no-edit -s recursive -X theirs droid master 
     cat conf-extra/processing.conf >> conf/processing.conf
     cat conf-extra/reporting.conf >> conf/reporting.conf
@@ -24,7 +24,7 @@ Installation - Easy integration script:
 
 Documentation
 =============
-- CuckooDroid - http://cuckoo-droid.readthedocs.org/
+- CuckooDroid - http://cuckoo-droid2.readthedocs.org/
 - Cuckoo Sandbox - http://cuckoo.readthedocs.org/
 
 You are advised to read the Cuckoo Sandbox documentation before using CuckooDroid!
